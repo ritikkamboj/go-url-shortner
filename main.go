@@ -19,6 +19,7 @@ var urlDB = make(map[string]URL)
 func generateShortURL(OriginalUrl string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(OriginalUrl))
+	// this above gives us bites slice
 	fmt.Println("hasher is :", hasher)
 	data := hasher.Sum(nil)
 	fmt.Println("data is :", data)
@@ -26,6 +27,19 @@ func generateShortURL(OriginalUrl string) string {
 	hash := hex.EncodeToString(data)
 	fmt.Println("hash is :", hash)
 	return hash[:8]
+
+}
+
+func createURL(OriginalUrl string) string {
+	shortURL := generateShortURL(OriginalUrl)
+	id := shortURL
+	urlDB[id] = URL{
+		ID:           id,
+		OriginalUrl:  OriginalUrl,
+		ShortUrl:     shortURL,
+		CreationDate: time.Now(),
+	}
+	return shortURL
 
 }
 
