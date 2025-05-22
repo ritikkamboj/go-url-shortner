@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"time"
 )
@@ -15,15 +16,22 @@ type URL struct {
 
 var urlDB = make(map[string]URL)
 
-func generateShortURL(OriginalUrl string) {
+func generateShortURL(OriginalUrl string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(OriginalUrl))
 	fmt.Println("hasher is :", hasher)
+	data := hasher.Sum(nil)
+	fmt.Println("data is :", data)
+
+	hash := hex.EncodeToString(data)
+	fmt.Println("hash is :", hash)
+	return hash[:8]
 
 }
 
 func main() {
 	original_url := "https://github.com/ritikkamboj"
-	generateShortURL(original_url)
+	data1 := generateShortURL(original_url)
+	fmt.Println("data1 is :", data1)
 
 }
