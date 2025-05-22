@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -62,14 +63,30 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World ")
 }
 
+func ShortUrlHandler(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		URL string `json : "url"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	shortURL := createURL(data.URL)
+	fmt.Fprintf(w, shortURL)
+
+}
+
 func main() {
-	original_url := "https://github.com/ritikkamboj"
-	data1 := generateShortURL(original_url)
-	fmt.Println("data1 is :", data1)
+	// original_url := "https://github.com/ritikkamboj"
+	// data1 := generateShortURL(original_url)
+	// fmt.Println("data1 is :", data1)
 
 	// Register the handler function to regiter all request to root URL
 
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/shortner", ShortUrlHandler)
 	// starting the HTTP server on some port
 
 	fmt.Println("server is going to start on 3000....")
