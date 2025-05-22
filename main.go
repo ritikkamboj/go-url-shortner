@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -55,9 +56,27 @@ func createURL(OriginalUrl string) string {
 
 }
 
+func handler(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("jai baabe ki")
+	fmt.Fprintf(w, "Hello World ")
+}
+
 func main() {
 	original_url := "https://github.com/ritikkamboj"
 	data1 := generateShortURL(original_url)
 	fmt.Println("data1 is :", data1)
+
+	// Register the handler function to regiter all request to root URL
+
+	http.HandleFunc("/", handler)
+	// starting the HTTP server on some port
+
+	fmt.Println("server is going to start on 3000....")
+	err := http.ListenAndServe(":3000", nil)
+
+	if err != nil {
+		fmt.Println("There is error on starting server ..", err)
+	}
 
 }
